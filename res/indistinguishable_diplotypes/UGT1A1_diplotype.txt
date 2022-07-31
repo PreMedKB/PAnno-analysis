@@ -1,0 +1,7 @@
+	0	1	2	3	4	Duplicated
+*1/*80+*28	T/T	C/T	TA(7)/TA(8)	G/G	C/C	True
+*28/*80	T/T	C/T	TA(7)/TA(8)	G/G	C/C	True
+*1/*80+*37	T/T	C/T	TA(7)/TA(9)	G/G	C/C	True
+*37/*80	T/T	C/T	TA(7)/TA(9)	G/G	C/C	True
+*28/*80+*37	T/T	C/T	TA(8)/TA(9)	G/G	C/C	True
+*37/*80+*28	T/T	C/T	TA(8)/TA(9)	G/G	C/C	True
