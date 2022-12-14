@@ -42,13 +42,13 @@ final_df.T.to_csv('../manuscript/diplotype_concordance/detail_res2_v20220420.txt
 
 
 ### Validation data
-getrm = pd.read_csv('../cpat_data/test/getrm_raw.txt', sep='\t', index_col=0)
+getrm = pd.read_csv('../panno_data/test/getrm_raw.txt', sep='\t', index_col=0)
 # Filter samples and genes
 samples = list(final_rank_res.keys())
 overlap_gene = list(set(gene_list).intersection(set(getrm.columns.to_list())))
 getrm_new = getrm[getrm.index.isin(samples)][overlap_gene].T.replace(np.nan, '-')
 
-pharmcat = pd.read_csv('../cpat_data/test/pharmcat_raw.txt', sep='\t', index_col=0)
+pharmcat = pd.read_csv('../panno_data/test/pharmcat_raw.txt', sep='\t', index_col=0)
 # Filter samples and genes
 samples = sorted(list(final_rank_res.keys()))
 pharmcat_new = pharmcat[pharmcat.index.isin(samples)][overlap_gene].T.replace(np.nan, '-')
@@ -105,7 +105,7 @@ for g in sorted(overlap_gene):
   test = final_df.loc[g, samples].to_list()
   validate = getrm_new.loc[g, samples].to_list()
   pharmcat = pharmcat_new.loc[g, samples].to_list()
-  cpat_new = test
+  panno_new = test
   # for item in test:
   #   item_new = []
   #   for tmp in item:
@@ -114,13 +114,13 @@ for g in sorted(overlap_gene):
   #     if g in ['ABCG2', 'VKORC1', 'IFNL3']:
   #       ii = i[0].replace('C', 'G').replace('T', 'A') + i[1].replace('C', 'G').replace('T', 'A')
   #     item_new.append(ii)
-  #   cpat_new.append(';'.join(item_new))
+  #   panno_new.append(';'.join(item_new))
   validate_new = [i.replace(' ', '') for i in validate]
-  index_name.extend(['%s.GetRM' % g, '%s.PharmCAT' % g, '%s.CPAT' % g])
-  output.extend([validate_new, pharmcat, cpat_new])
+  index_name.extend(['%s.GetRM' % g, '%s.PharmCAT' % g, '%s.PAnno' % g])
+  output.extend([validate_new, pharmcat, panno_new])
 
 output_df = pd.DataFrame(output, index = index_name, columns = samples).T
-output_df.to_csv('../manuscript/diplotype_concordance/GetRM_CPAT_PharmCAT_v20220421.txt', sep = '\t')
+output_df.to_csv('../manuscript/diplotype_concordance/GetRM_PAnno_PharmCAT_v20220421.txt', sep = '\t')
 
 
 
@@ -134,14 +134,14 @@ for index, row in loci.iterrows():
   assays = list(row[1:].dropna().values)
   assays.append('*1')
   uniq_loci = set(', '.join(assays).split(', '))
-  # cpat
+  # panno
   allele_definition_table = "./assets/definition/%s_allele_definition_table.txt" % (gene)
-  cpat_gene_define = pd.read_csv(allele_definition_table, sep='\t', skiprows=5)
-  print(cpat_gene_define.columns[0])
-  cpat_loci = set(cpat_gene_define[cpat_gene_define.columns[0]].values)
-  getrm_uniq = uniq_loci - cpat_loci
-  cpat_uniq = cpat_loci - uniq_loci
-  lt.append([gene, ', '.join(sorted(uniq_loci)), ', '.join(sorted(cpat_loci)), ', '.join(sorted(getrm_uniq)), ', '.join(sorted(cpat_uniq))])
+  panno_gene_define = pd.read_csv(allele_definition_table, sep='\t', skiprows=5)
+  print(panno_gene_define.columns[0])
+  panno_loci = set(panno_gene_define[panno_gene_define.columns[0]].values)
+  getrm_uniq = uniq_loci - panno_loci
+  panno_uniq = panno_loci - uniq_loci
+  lt.append([gene, ', '.join(sorted(uniq_loci)), ', '.join(sorted(panno_loci)), ', '.join(sorted(getrm_uniq)), ', '.join(sorted(panno_uniq))])
 
 df = pd.DataFrame(lt)
 df.to_csv('../Get-RM/loci_alleles_uniq.txt', sep='\t')

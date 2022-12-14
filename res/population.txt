@@ -1,4 +1,4 @@
-Get-RM 137 Samples	Population	Superpopulation	CPAT 88 Samples	PharmCAT 59 Samples	Group
+Get-RM 137 Samples	Population	Superpopulation	PAnno 88 Samples	PharmCAT 59 Samples	Group
 NA12236	CEU	EUR	NA12236	-	European
 NA11839	CEU	EUR	NA11839	-	European
 NA17641	-	-	-	-	

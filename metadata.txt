@@ -1,4 +1,4 @@
-Get-RM 137 Samples	Included in CPAT	Transformed Biogeographic Group	Abbreviation	1000 Genomes Population	1000 Genomes Superpopulation
+Get-RM 137 Samples	Included in PAnno	Transformed Biogeographic Group	Abbreviation	1000 Genomes Population	1000 Genomes Superpopulation
 HG00276	Y	European	EUR	FIN	EUR
 HG00436	Y	East Asian	EAS	CHS	EAS
 HG00589	Y	East Asian	EAS	CHS	EAS

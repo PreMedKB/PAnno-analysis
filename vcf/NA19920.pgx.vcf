@@ -3462,8 +3462,8 @@
 ##contig=<ID=HLA-DRB1*15:03:01:02,length=11569>
 ##contig=<ID=HLA-DRB1*16:02:01,length=11005>
 ##reference=file:///gpfs/internal/resources/GRCh38_1000genomes/GRCh38_full_analysis_set_plus_decoy_hla.fa
-##bcftools_viewVersion=1.15+htslib-1.15
-##bcftools_viewCommand=view -R ./bed/cpat.hla.padding20.bed ./1000genome/NA19920.haplotypeCalls.er.raw.vcf.gz; Date=Tue Apr 19 20:07:19 2022
+##bcftools_viewVersion=1.16+htslib-1.16
+##bcftools_viewCommand=view -R ./bed/pgx.padded.bed ./1000genome/NA19920.haplotypeCalls.er.raw.vcf.gz; Date=Tue Sep 20 11:14:12 2022
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA19920
 chr1	964575	.	GGCTGTGGGAGGGGTCCGCGCGTCCGCAGTGGGGATGT	G,<NON_REF>	808.73	.	DP=20;ExcessHet=3.0103;MLEAC=2,0;MLEAF=1,0;MQ0=0;RAW_MQ=67741	GT:AD:DP:GQ:PGT:PID:PL:SB	1/1:0,19,0:19:57:0|1:964569_C_T:846,57,0,846,57,846:0,0,16,3
 chr1	1582424	.	A	<NON_REF>	.	.	END=1582430	GT:DP:GQ:MIN_DP:PL	0/0:35:84:34:0,84,1260

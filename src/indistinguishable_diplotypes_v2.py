@@ -2,15 +2,15 @@ import pandas as pd
 import numpy as np
 import re, itertools, json
 
-cpat_dip_base = json.loads(open("./assets/cpat_dip_base.json").read())
+panno_dip_base = json.loads(open("./assets/panno_dip_base.json").read())
 
 gene_list = ["ABCG2", "CACNA1S", "CFTR", "CYP2B6", "CYP2C8", "CYP2C9", "CYP2C19", "CYP2D6",\
              "CYP3A4", "CYP3A5", "CYP4F2", "DPYD", "G6PD", "MT-RNR1", "NUDT15", "IFNL3", \
              "RYR1", "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
 
 for gene in gene_list:
-  info = cpat_dip_base[gene]
-  ## 两两组合得到diplotypes
+  info = panno_dip_base[gene]
+  ## Combine the haplotypes to get diplotypes
   hap_define = info['haplotype_definition']
   
 dic_degenerate_bases = {

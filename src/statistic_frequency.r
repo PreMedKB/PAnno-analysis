@@ -5,16 +5,20 @@ library(ggplot2); library(ggsci); library(ggthemes); library(ggpubr); library(ti
 haplotype <- data.frame()
 race <- c("African American/Afro-Caribbean", "American", "Central/South Asian", "East Asian", "European", "Latino", "Near Eastern", "Oceanian", "Sub-Saharan African")
 
-for (f in list.files('./assets/population_frequency/')){
+
+for (f in list.files('/Volumes/TM/PAnno/PAnno-db/data/pgx_diplotypes/population_frequency/')){
   gene <- strsplit(f, '_')[[1]][1]
-  #if (gene != "CYP2D6"){
-    frequency <- read.csv(paste0('./assets/population_frequency/', f), sep="\t")
+  if (gene %in% c("CYP2B6", "CYP2C8", "CYP2C9", "CYP2C19", "CYP2D6",
+                  "CYP3A4", "CYP3A5", "CYP4F2", "DPYD", "NUDT15",
+                  "SLCO1B1", "TPMT", "UGT1A1")){
+    frequency <- read.csv(paste0('/Volumes/TM/PAnno/PAnno-db/data/pgx_diplotypes/population_frequency/', f), sep="\t")
     cols <- c("Allele", race)
     colnames(frequency) <- cols
     frequency$Gene <- gene
     haplotype <- rbind(haplotype, frequency)
-  #}
+  }
 }
+
 
 haplotype_frequency <- pivot_longer(haplotype, cols = -c(Allele, Gene), names_to = 'Group')
 #haplotype_frequency$Allele <- factor(haplotype_frequency$Allele, levels = unique(haplotype_frequency$Allele))
@@ -22,15 +26,17 @@ haplotype_frequency <- pivot_longer(haplotype, cols = -c(Allele, Gene), names_to
 ## Diplotype
 diplotype <- data.frame()
 race <- c("African American/Afro-Caribbean", "American", "Central/South Asian", "East Asian", "European", "Latino", "Near Eastern", "Oceanian", "Sub-Saharan African")
-for (f in list.files('./assets/diplotype_frequency/')){
+for (f in list.files('/Volumes/TM/PAnno/PAnno-db/data/pgx_diplotypes/diplotype_frequency/')){
   gene <- strsplit(f, '_')[[1]][1]
-  #if (gene != "CYP2D6") {
-    frequency <- read.csv(paste0('./assets/diplotype_frequency/', f), sep="\t")
+  if (gene %in% c("CYP2B6", "CYP2C8", "CYP2C9", "CYP2C19", "CYP2D6",
+                  "CYP3A4", "CYP3A5", "CYP4F2", "DPYD", "NUDT15",
+                  "SLCO1B1", "TPMT", "UGT1A1")){
+    frequency <- read.csv(paste0('/Volumes/TM/PAnno/PAnno-db/data/pgx_diplotypes/diplotype_frequency/', f), sep="\t")
     cols <- c("Allele", race, "Global")
     colnames(frequency) <- cols
     frequency$Gene <- gene
     diplotype <- rbind(diplotype, frequency)
-  #}
+  }
 }
 
 diplotype_frequency <- pivot_longer(diplotype, cols = -c(Allele, Gene), names_to = 'Group')
@@ -54,24 +60,28 @@ p1 <- sd_per_allele %>%
 p1+coord_flip()+theme(legend.position = "none")
 
 # Boxplot of CV
-median_by_gene <- sd_per_allele %>% group_by(Gene) %>% summarise(median = median(CV)) %>% arrange(median)
-same_pattern <- read.csv('./same_pattern.txt', sep='\t')
-merge_df <- merge(median_by_gene, same_pattern)
-cor.test(merge_df$median, merge_df$Diplotype)
+#median_by_gene <- sd_per_allele %>% group_by(Gene) %>% summarise(median = median(CV)) %>% arrange(median)
+#same_pattern <- read.csv('./same_pattern.txt', sep='\t')
+#merge_df <- merge(median_by_gene, same_pattern)
+#cor.test(merge_df$median, merge_df$Diplotype)
 
+
+################### Figure 5a ######################
 tmp <- sd_per_allele %>% group_by(Gene) %>% summarise(mean = mean(CV, na.rm = T)) %>% arrange(mean)
+print(tmp)
 sd_per_allele$Gene <- factor(sd_per_allele$Gene, levels = rev(tmp$Gene))
 p2 <- sd_per_allele %>%
   ggplot(aes(x=Gene, y=CV, fill=Gene)) +
-  geom_boxplot(alpha=0.9) + theme_few() + 
+  geom_boxplot(alpha=0.9, outlier.size = 0.8) + theme_few() + 
   theme(axis.text.x = element_text(angle = 30, hjust=1, vjust=1)) + 
   #scale_color_viridis_d(direction = 1) + 
   scale_fill_viridis_d(direction = 1) + 
-  labs(y = 'CV', x=NULL)
+  labs(y = 'CV of diplotype frequency', x=NULL)
 
-pdf('CV_frequency_diplotype.pdf', width = 7.5*1.15, height = 3*0.9)
+pdf('/Volumes/TM/PAnno/PAnno-analysis/figure/CV_frequency_diplotype.pdf', width = 6.5, height = 2.7)
 p2+theme(legend.position = "none")
 dev.off()
+#######################################################
 
 # na.omit(sd_per_allele) %>% ggdensity(x="SD", rug = TRUE, color="Gene", size=1) + scale_color_viridis_d()## 这样看差异很小
 
@@ -119,8 +129,7 @@ p1; p3+theme(legend.position = "none")
 dev.off()
 
 ####################
-shapes.race <- c(16, 18, 15, 17, 19, 8, 10, 13, 6); 
-names(shapes.race) <- race
+shapes.race <- c(16, 18, 15, 17, 19, 8, 10, 13, 6); names(shapes.race) <- race
 # Frequencies for haplotype and diplotye
 p4 <- ggscatter(haplotype_frequency, "Allele", "value", 
                 shape = 'Group',
@@ -154,23 +163,28 @@ haplotype_frequency %>% group_by(Group, Gene) %>% summarise(Variance = sd(value)
   scale_color_npg() + labs(y = 'Standard deviation of haplotype frequencies')
 
 
+
+#################### Figure 5b ####################
 gene <- 'CYP4F2'
-#gene <- 'CYP3A5'
+shapes.race <- c(16, 18, 15, 17, 19, 8, 10, 13, 6); names(shapes.race) <- race
 h <- haplotype_frequency %>% filter(Gene == gene) %>% mutate(Class = 'Haplotypes')
 d <- diplotype_frequency %>% filter(Gene == gene, Group != 'Global') %>% mutate(Class = 'Diplotypes')
 hd <- rbind(h, d); hd$Class <- factor(hd$Class, levels = c('Haplotypes', 'Diplotypes'))
 hd$`Biogeographic group` <-hd$Group
 hdg <- ggplot(hd, aes(x=Allele, y=value)) +
-  geom_point(aes(shape = `Biogeographic group`, color = `Biogeographic group`), alpha = 1, size = 3) + 
+  geom_point(aes(shape = `Biogeographic group`, color = `Biogeographic group`), 
+             alpha = 1, size = 3, position = "jitter") + 
   theme_few() + scale_shape_manual(values = shapes.race) + 
   scale_color_npg() + labs(y = 'CYP4F2 frequency', x = NULL) + 
   facet_grid(.~Class, scales = 'free', space = 'free')
 
 
-pdf('CYP4F2.pdf', width = 7.5*1.2, height = 3*0.9)
-hdg#+theme(plot.margin=unit(rep(1,4),'lines'))#+theme(legend.position = "bottom")
+pdf('/Volumes/TM/PAnno/PAnno-analysis/figure/CYP4F2.pdf', width = 7.5*1.15, height = 3*0.9)
+hdg #+ guides(color=guide_legend(nrow=3,bycol=TRUE)) + theme(legend.position = "bottom", legend.box="vertical") 
 dev.off()
+#######################################################
 
-pdf('CYP3A5.pdf', width = 7.5*1.2, height = 3)
-hdg#+theme(plot.margin=unit(rep(1,4),'lines'))#+theme(legend.position = "bottom")
-dev.off()
+# indistinguishable diplotypes
+
+
+
